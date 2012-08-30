@@ -14,14 +14,21 @@
     </head>
     <body>
         <%
-                String nome = request.getParameter("txtNome");
-                String email = request.getParameter("txtEmail");
-                String ddd = request.getParameter("txtDDD");
-                String cel = request.getParameter("txtCel");
-                if (nome != null) {
-                    session.setAttribute("nome", nome);
-                }
-            }
+            String nome = (String) session.getAttribute("nome");
+            String email = (String) session.getAttribute("email");
+            String rg = (String) session.getAttribute("rg");
+            String sexo = (String) session.getAttribute("sexo");
+            String estado = (String) session.getAttribute("estado");
+            String cidade = (String) session.getAttribute("cidade");
+            String bairro = (String) session.getAttribute("bairro");
+            String endereco = (String) session.getAttribute("endereco");
+            String celular = (String) session.getAttribute("celular");
+            String telefone = (String) session.getAttribute("telefone");
+            String escolaridade = (String) session.getAttribute("escolaridade");
+            String nivel = (String) session.getAttribute("nivel");
+            String area = (String) session.getAttribute("area");
+            String faculdade = (String) session.getAttribute("faculdade");
+            String curso = (String) session.getAttribute("curso");
         %>
         <form>
             <jsp:include page="header.jsp"/>
@@ -43,14 +50,6 @@
                     </td>
                     <td>
                         <%=email%>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Celular:
-                    </td>
-                    <td>
-                        ( <%=ddd%> ) <%=cel%>
                     </td>
                 </tr>
             </table>

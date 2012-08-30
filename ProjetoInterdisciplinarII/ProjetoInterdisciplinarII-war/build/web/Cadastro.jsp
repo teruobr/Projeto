@@ -13,7 +13,7 @@
         <title>Cadastro de novo usuário</title>
     </head>
     <body>
-        <form action="MeusDados.jsp">
+        <form action="DadosCadastrais.jsp">
             <jsp:include page="header.jsp"/>
             <h1>Cadastro</h1>
             <br>
@@ -21,18 +21,10 @@
             <table>
                 <tr>
                     <td>
-                        <input type="radio" name="lstPerfil" id="rbCandidato"/> Candidato
-                    </td>
-                    <td>
-                        <input type="radio" name="lstPerfil" id="rbEmpresa"/> Empresa
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         Nome:
                     </td>
                     <td>
-                        <input type="text" name="txtNome" />
+                        <input type="text" name="txtNome" required="true" />
                     </td>
                 </tr>
                 <tr>
@@ -40,7 +32,7 @@
                         E-mail:
                     </td>
                     <td>
-                        <input type="text" name="txtEmail" />
+                        <input type="text" name="txtEmail" required="true" />
                     </td>
                 </tr>
                 <tr>
@@ -48,7 +40,7 @@
                         Senha:
                     </td>
                     <td>
-                        <input type="password" name="txtSenha" />
+                        <input type="password" name="txtSenha" required="true" />
                     </td>
                 </tr>
                 <tr>
