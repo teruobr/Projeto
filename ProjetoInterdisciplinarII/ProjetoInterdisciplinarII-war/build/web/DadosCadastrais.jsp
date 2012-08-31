@@ -14,18 +14,17 @@
     </head>
     <body>
         <%
-                String nome = request.getParameter("txtNome");
-                String email = request.getParameter("txtEmail");
-                String senha = request.getParameter("txtSenha");
-                if (nome != null) {
-                    session.setAttribute("nome", nome);
-                }
-                if (email != null) {
-                    session.setAttribute("email", email);
-                }
-                if (senha != null) {
-                    session.setAttribute("senha", senha);
-                }
+            String nome = request.getParameter("txtNome");
+            String email = request.getParameter("txtEmail");
+            String senha = request.getParameter("txtSenha");
+            if (nome != null) {
+                session.setAttribute("nome", nome);
+            }
+            if (email != null) {
+                session.setAttribute("email", email);
+            }
+            if (senha != null) {
+                session.setAttribute("senha", senha);
             }
         %>
         <form action="CadastroSucesso.jsp" >
@@ -69,10 +68,10 @@
                     </td>
                     <td>
                         <select name="lstCidade">
-                            <option value="Sp">São Paulo</option>
-                            <option value="StoA">Santo André</option>
-                            <option value="Sbc">São Bernardo do Campo</option>
-                            <option value="Sc">São Caetano do Sul</option>
+                            <option value="São Paulo">São Paulo</option>
+                            <option value="Santo André">Santo André</option>
+                            <option value="São Bernardo do Campo">São Bernardo do Campo</option>
+                            <option value="São Caetano do Sul">São Caetano do Sul</option>
                         </select>
                     </td>
                 </tr>
@@ -114,9 +113,9 @@
                     <td>
                         <select name="lstEscolaridade">
                             <option value="Tecnico">Técnico</option>
-                            <option value="SuperiorInc">Superior Incompleto</option>
-                            <option value="SuperiorCom">Superior Completo</option>
-                            <option value="Pos">Pós-Graduado</option>
+                            <option value="Superior Incompleto">Superior Incompleto</option>
+                            <option value="Superior Completo">Superior Completo</option>
+                            <option value="Pós-Graduado">Pós-Graduado</option>
                         </select>
                     </td>
                     <td>
@@ -124,9 +123,9 @@
                     </td>
                     <td>
                         <select name="lstNivel">
-                            <option value="Tecnico">Técnico</option>
-                            <option value="Estagiario">Estagiário</option>
-                            <option value="Jr">Júnior</option>
+                            <option value="Técnico">Técnico</option>
+                            <option value="Estagiário">Estagiário</option>
+                            <option value="Júnior">Júnior</option>
                             <option value="Pleno">Pleno</option>
                             <option value="Senior">Senior</option>
                             <option value="Gerente">Gerente </option>
@@ -148,8 +147,8 @@
                     <td>
                         <select name="lstArea">
                             <option value="Suporte">Suporte</option>
-                            <option value="Programacao">Programação</option>
-                            <option value="Analise">Análise</option>
+                            <option value="Programação">Programação</option>
+                            <option value="Análise">Análise</option>
                             <option value="Projeto">Projetos</option>
                         </select>
                     </td>

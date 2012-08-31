@@ -52,6 +52,105 @@
                         <%=email%>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        RG:
+                    </td>
+                    <td>
+                        <%=rg%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Sexo:
+                    </td>
+                    <td>
+                        <%=sexo%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Estado:
+                    </td>
+                    <td>
+                        <%=estado%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Cidade:
+                    </td>
+                    <td>
+                        <%=cidade%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Bairro:
+                    </td>
+                    <td>
+                        <%=bairro%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Endereço:
+                    </td>
+                    <td>
+                        <%=endereco%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Celular:
+                    </td>
+                    <td>
+                        <%=celular%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Telefone:
+                    </td><td>
+                        <%=telefone%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Grau de Escolaridade:
+                    </td>
+                    <td>
+                        <%=escolaridade%>
+                    </td>
+                    <td>
+                        Nível de Atuação:
+                    </td>
+                    <td>
+                        <%=nivel%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Faculdade:
+                    </td>
+                    <td>
+                        <%=faculdade%>
+                    </td>
+                    <td>
+                        Área de Atuação:
+                    </td>
+                    <td>
+                        <%=area%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Curso:
+                    </td>
+                    <td>
+                        <%=curso%>
+                    </td>
+                </tr>
             </table>
         </form>
     </body>
