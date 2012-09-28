@@ -19,58 +19,51 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author 31049184
  */
-@WebServlet(name = "CadastraUsuario", urlPatterns = {"/CadastraUsuario"})
-public class CadastraUsuario extends HttpServlet {
+@WebServlet(name = "ValidarUsuario", urlPatterns = {"/ValidarUsuario"})
+public class ValidarUsuario extends HttpServlet {
+
     @EJB
     private LUsuarioLocal lUsuario;
 
-     
-    protected void  processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            String nome = (String) request.getParameter("txtNome");
-            String email = (String) request.getParameter("txtEmail");
-            String senha = (String) request.getParameter("txtSenha");
-       
-          
-           
-            Usuario usuario = new Usuario ();
-            usuario.setNome(nome);
+
+            String email = (String) request.getParameter("emailLogin");
+            String senha = (String) request.getParameter("senhaLogin");
+
+
+
+            Usuario usuario = new Usuario();
             usuario.setEmail(email);
             usuario.setSenha(senha);
-            
-            
-            try {
-                
-                
-                
-                if (this.lUsuario.consultar(usuario) != null) {
 
-                    response.sendRedirect(response.encodeRedirectURL("UsuarioExistente.jsp"));
+
+
+            try {
+
+                usuario = this.lUsuario.pegarDados(usuario);
+                if (usuario != null) {
+
+                    request.getSession().setAttribute("usuario", usuario);
+                    response.sendRedirect(response.encodeRedirectURL("MeusDados.jsp"));
                 } else {
-                   
-                //usuario = this.lUsuario.consultar(usuario);
-                this.lUsuario.incluir(usuario);
-                
-                request.getSession().setAttribute("txtNome", usuario.getNome());
-                request.getSession().setAttribute("txtSenha", usuario.getSenha());
-                request.getSession().setAttribute("txtEmail", usuario.getEmail());
-                request.getSession().setAttribute("usuario", usuario);
-                response.sendRedirect(response.encodeRedirectURL("DadosCadastrais.jsp"));
-                
+                    response.sendRedirect(response.encodeRedirectURL("UsuarioInexistente.jsp"));
                 }
-                
-            } catch(Exception ex) {
-   
-                 ex.printStackTrace();
+
+
+
+
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
                 response.sendRedirect(response.encodeRedirectURL("UsuarioInexistente.jsp"));
             }
-            
-           
-           
-        } finally {            
+
+
+        } finally {
             out.close();
         }
     }

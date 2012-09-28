@@ -1,67 +1,64 @@
-<%-- 
-    Document   : DadosCadastrais
-    Created on : 30/08/2012, 11:56:54
-    Author     : Teruo
---%>
 
+<%@page import="com.sun.xml.rpc.processor.modeler.j2ee.xml.string"%>
 <%--<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>--%>
 
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="bean.Usuario"%>
+<%@page import="bean.Usuario_"%>
+
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="Estilo.css" type="text/css">
-        <title>Cadastro de novo usu?rio</title>
+        <title>Cadastro de novo usuário</title>
     </head>
     <body>
         <%
-            String nome = (String) request.getAttribute("txtNome");
-            String email = (String) request.getAttribute("txtEmail");
-            String senha = (String) request.getAttribute("txtSenha");
-            if (nome != null) {
-                session.setAttribute("nome", nome);
-            }
-            if (email != null) {
-                session.setAttribute("email", email);
-            }
-            if (senha != null) {
-                session.setAttribute("senha", senha);
-            }
+
+            Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+            String email = usuario.getEmail();
+            String nome = usuario.getNome();
+            String rg = usuario.getRg();
+            String sexo = usuario.getSexo();
+            String estado = usuario.getEstado();
+            String cidade = usuario.getCidade();
+            String bairro = usuario.getBairro();
+            String endereco = usuario.getEndereco();
+            String celular = usuario.getCelular().substring(1);
+            String DDDcel = celular.substring(0,1);
+            String telefone = usuario.getTelefone().substring(1);
+            String DDDtel = telefone.substring(0,1);
+            String escolaridade = usuario.getEscolaridade();
+            String nivel = usuario.getNivel();
+            String area = usuario.getArea();
+            String faculdade = usuario.getFaculdade();
+            String curso = usuario.getCurso();
         %>
-        <form action="CadastraCompleto" >
-            <jsp:include page="header.jsp"/>
-            <h1>Dados Cadastrais</h1>
+        <form action="AtualizaCadastro" >
+            <jsp:include page="MenuLogado.jsp"/>
+            <h1>Atualizar Dados Cadastrais</h1>
             <br>
-            Preencha os campos abaixo para finalizar o seu cadastro.
+            Preencha os campos abaixo para atualizar o seu cadastro.
             <table>
                 <tr>
                     <td>
                         RG:
                     </td>
                     <td>
-                        <input  type="text" name="txtRg" required="true"/>
+                        <input  value="<%=rg%>" type="text" name="txtRg" required="true"/>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        Sexo:
-                    </td>
-                    <td>
-                        <select name="lstSexo">
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
-                        </select>
-                    </td>
-                </tr>
+
                 <tr>
                     <td>
                         Estado:
                     </td>
                     <td>
-                        <select name="lstEstado">
-                            <option value="SP">S?o Paulo </option>
+                        <select name="lstEstado" required="true">
+                            <option value="">Selecione</option>
+                            <option value="SP">São Paulo </option>
                         </select>
                     </td>
                 </tr>
@@ -70,7 +67,8 @@
                         Cidade:
                     </td>
                     <td>
-                        <select name="lstCidade">
+                        <select name="lstCidade" required="true">
+                            <option value="">Selecione</option>
                             <option value="S?o Paulo">S?o Paulo</option>
                             <option value="Santo Andr?">Santo Andr?</option>
                             <option value="S?o Bernardo do Campo">S?o Bernardo do Campo</option>
@@ -83,7 +81,7 @@
                         Bairro:
                     </td>
                     <td>
-                        <input type="text" name="txtBairro"/>
+                        <input value="<%=bairro%>" type="text" name="txtBairro"/>
                     </td>
                 </tr>
                 <tr>
@@ -91,7 +89,7 @@
                         Endere?o:
                     </td>
                     <td>
-                        <input type="text" name="txtEndereco"/>
+                        <input value="<%=endereco%>" type="text" name="txtEndereco"/>
                     </td>
                 </tr>
                 <tr>
@@ -99,14 +97,14 @@
                         Celular:
                     </td>
                     <td>
-                        (<input type="text" name="txtDDDCel" maxlength="2" size="1" />) <input type="text" name="txtCel" maxlength="9" size="7"/>
+                        (<input type="text" name="txtDDDCel" maxlength="2" size="1" />) <input value="<%=celular%>" type="text" name="txtCel" maxlength="9" size="7"/>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         Telefone:
                     </td><td>
-                        (<input type="text" name="txtDDDTel" maxlength="2" size="1" />) <input type="text" name="txtTel" maxlength="8" size="7"/>
+                        (<input type="text" name="txtDDDTel" maxlength="2" size="1" />) <input value="<%=telefone%>" type="text" name="txtTel" maxlength="8" size="7"/>
                     </td>
                 </tr>
                 <tr>
@@ -153,11 +151,10 @@
                     <td>
                         <select name="lstArea" required="true">
                             <option value="">Selecione</option>
-                            <option value="Programação">Programação</option>
-                            <option value="Análise">Análise</option>
-                            <option value="Redes">Redes</option>
-                            <option value="Gerência">Gerência</option>
-                            <option value="Pesquisa">Pesquisa</option>
+                            <option value="Suporte">Suporte</option>
+                            <option value="Programa??o">Programa??o</option>
+                            <option value="An?lise">An?lise</option>
+                            <option value="Projeto">Projetos</option>
                         </select>
                     </td>
                 </tr>

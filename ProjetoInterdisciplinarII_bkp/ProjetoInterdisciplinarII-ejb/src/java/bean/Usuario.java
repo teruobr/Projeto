@@ -19,11 +19,28 @@ import javax.persistence.Id;
 public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome,rg ,sexo ,estado , cidade , bairro ,endereco ,celular,telefone ,escolaridade, nivel , area, faculdade ,curso;
-
+    private String email,senha;
+    
     public Usuario() {
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
         

@@ -4,8 +4,13 @@
     Author     : Teruo
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@page import="bean.Usuario"%>
+<%@page import="bean.Usuario_"%>
+<%--<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>--%>
+
+<%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13,21 +18,24 @@
         <title>Meus dados</title>
         <script type="text/javascript">
             function alertaInexistente(){
-                alert("Usu√°rio inexistente.");
+                alert("Usu·rio inexistente.");
             }
         </script>
     </head>
     <body>
         <%
-            String emailLogin = request.getParameter("emailLogin");
-            String senhaLogin = (String) request.getParameter("senhaLogin");
-            String email = (String) session.getAttribute("email");
-            String senha = (String) session.getAttribute("senha");
-
-            if (!(emailLogin.equals(email)) || !(senhaLogin.equals(senha))) {
-                response.sendRedirect("UsuarioInexistente.jsp");
+            /*
+             * String emailLogin = request.getParameter("emailLogin"); String
+             * senhaLogin = (String) request.getParameter("senhaLogin"); String
+             * email = (String) session.getAttribute("email"); String senha =
+             * (String) session.getAttribute("senha");
+             *
+             * if (!(emailLogin.equals(email)) || !(senhaLogin.equals(senha))) {
+             * response.sendRedirect("UsuarioInexistente.jsp");
             }
+             
 
+            String email = (String) session.getAttribute("email");
             String nome = (String) session.getAttribute("nome");
             String rg = (String) session.getAttribute("rg");
             String sexo = (String) session.getAttribute("sexo");
@@ -41,7 +49,28 @@
             String nivel = (String) session.getAttribute("nivel");
             String area = (String) session.getAttribute("area");
             String faculdade = (String) session.getAttribute("faculdade");
-            String curso = (String) session.getAttribute("curso");
+            String curso = (String) session.getAttribute("curso");*/
+            
+            Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+            String email = usuario.getEmail();
+            String nome = usuario.getNome();
+            String rg = usuario.getRg();
+            String sexo = usuario.getSexo();
+            String estado = usuario.getEstado();
+            String cidade = usuario.getCidade();
+            String bairro = usuario.getBairro();
+            String endereco = usuario.getEndereco();
+            String celular = usuario.getCelular();
+            String telefone = usuario.getTelefone();
+            String escolaridade = usuario.getEscolaridade();
+            String nivel = usuario.getNivel();
+            String area = usuario.getArea();
+            String faculdade = usuario.getFaculdade();
+            String curso = usuario.getCurso();
+            System.out.println("AQUI \n\n\n\n\n" + usuario.getTelefone() + usuario.getEscolaridade() );
+
+
+
 
         %>
         <form>
@@ -108,7 +137,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Endere√ßo:
+                        EndereÁo:
                     </td>
                     <td>
                         <%=endereco%>
@@ -137,7 +166,7 @@
                         <%=escolaridade%>
                     </td>
                     <td>
-                        N√≠vel de Atua√ß√£o:
+                        NÌvel de AtuaÁ„o:
                     </td>
                     <td>
                         <%=nivel%>
@@ -151,7 +180,7 @@
                         <%=faculdade%>
                     </td>
                     <td>
-                        √Årea de Atua√ß√£o:
+                        ¡rea de AtuaÁ„o:
                     </td>
                     <td>
                         <%=area%>

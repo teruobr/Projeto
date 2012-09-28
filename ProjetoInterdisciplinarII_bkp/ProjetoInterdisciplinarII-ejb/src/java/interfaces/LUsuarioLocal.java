@@ -17,6 +17,9 @@ public interface LUsuarioLocal {
     public void incluir(Usuario pessoa);
     public void alterar(Usuario pessoa);
     public void excluir(Usuario pessoa);
+    public Usuario consultar(Usuario pessoa);
+    public Usuario pegarDados(Usuario pessoa);
+    
     
     
 }
