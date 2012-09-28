@@ -1,6 +1,9 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+/ProjetoInterdisciplinarII_bkp/dist/
+/ProjetoInterdisciplinarII_bkp/build/
+/ProjetoInterdisciplinarII_bkp/ProjetoInterdisciplinarII-ejb/dist/
+/ProjetoInterdisciplinarII_bkp/ProjetoInterdisciplinarII-ejb/build/
+/ProjetoInterdisciplinarII_bkp/ProjetoInterdisciplinarII-war/build/
+/ProjetoInterdisciplinarII_bkp/ProjetoInterdisciplinarII-war/dist/
+/ProjetoInterdisciplinarII_bkp/nbproject/private/
+/ProjetoInterdisciplinarII_bkp/ProjetoInterdisciplinarII-war/nbproject/private/
+/ProjetoInterdisciplinarII_bkp/ProjetoInterdisciplinarII-ejb/nbproject/private/
