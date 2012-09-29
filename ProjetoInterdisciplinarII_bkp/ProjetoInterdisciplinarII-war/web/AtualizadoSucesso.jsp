@@ -16,6 +16,7 @@
         <title>Cadastro Atualizado com sucesso</title>
     </head>
     <body>
+        <jsp:include page="MenuLogado.jsp"/>
         <%
             String rg = request.getParameter("txtRg");
             String sexo = request.getParameter("lstSexo");
@@ -73,7 +74,6 @@
                 session.setAttribute("curso", curso);
             }
         %>
-        <jsp:include page="MenuLogado.jsp"/>
         <h1>Seu cadastro foi atualizado com sucesso!</h1>
         Seja bem-vindo ao Portal de Vagas PI - II.
         <br>

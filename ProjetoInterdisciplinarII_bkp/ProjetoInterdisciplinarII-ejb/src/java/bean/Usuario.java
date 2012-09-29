@@ -21,7 +21,7 @@ public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome,rg ,sexo ,estado , cidade , bairro ,endereco ,celular,telefone ,escolaridade, nivel , area, faculdade ,curso;
+    private String nome,rg ,sexo ,estado , cidade , bairro ,endereco ,celular,telefone ,escolaridade, nivel , area, faculdade ,curso ,dddcelular , dddtelefone;
     private String email,senha;
     
     public Usuario() {
@@ -31,6 +31,24 @@ public class Usuario implements Serializable {
         return senha;
     }
 
+    public String getDddcelular() {
+        return dddcelular;
+    }
+
+    public void setDddcelular(String dddcelular) {
+        this.dddcelular = dddcelular;
+    }
+
+    public String getDddtelefone() {
+        return dddtelefone;
+    }
+
+    public void setDddtelefone(String dddtelefone) {
+        this.dddtelefone = dddtelefone;
+    }
+
+    
+    
     public void setSenha(String senha) {
         this.senha = senha;
     }

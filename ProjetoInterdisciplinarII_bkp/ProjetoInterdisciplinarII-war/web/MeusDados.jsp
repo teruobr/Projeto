@@ -6,11 +6,9 @@
 
 <%@page import="bean.Usuario"%>
 <%@page import="bean.Usuario_"%>
-<%--<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>--%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 
-<%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18,7 +16,7 @@
         <title>Meus dados</title>
         <script type="text/javascript">
             function alertaInexistente(){
-                alert("Usu·rio inexistente.");
+                alert("Usu√Ø¬ø¬Ωrio inexistente.");
             }
         </script>
     </head>
@@ -60,17 +58,16 @@
             String cidade = usuario.getCidade();
             String bairro = usuario.getBairro();
             String endereco = usuario.getEndereco();
+            String DDDcelular = usuario.getDddcelular();
             String celular = usuario.getCelular();
+            String DDDtelefone = usuario.getDddtelefone();
             String telefone = usuario.getTelefone();
             String escolaridade = usuario.getEscolaridade();
             String nivel = usuario.getNivel();
             String area = usuario.getArea();
             String faculdade = usuario.getFaculdade();
             String curso = usuario.getCurso();
-            System.out.println("AQUI \n\n\n\n\n" + usuario.getTelefone() + usuario.getEscolaridade() );
-
-
-
+            
 
         %>
         <form>
@@ -137,7 +134,7 @@
                 </tr>
                 <tr>
                     <td>
-                        EndereÁo:
+                        Endere√ßo:
                     </td>
                     <td>
                         <%=endereco%>
@@ -148,14 +145,14 @@
                         Celular:
                     </td>
                     <td>
-                        <%=celular%>
+                        <%=DDDcelular%><%=" "%><%=celular%>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         Telefone:
                     </td><td>
-                        <%=telefone%>
+                        <%=DDDtelefone%><%=" "%><%=telefone%>
                     </td>
                 </tr>
                 <tr>
@@ -166,7 +163,7 @@
                         <%=escolaridade%>
                     </td>
                     <td>
-                        NÌvel de AtuaÁ„o:
+                        N√≠vel de Atua√ß√£o:
                     </td>
                     <td>
                         <%=nivel%>
@@ -180,7 +177,7 @@
                         <%=faculdade%>
                     </td>
                     <td>
-                        ¡rea de AtuaÁ„o:
+                        √Årea de Atua√ß√£o:
                     </td>
                     <td>
                         <%=area%>

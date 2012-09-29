@@ -51,11 +51,17 @@
             if (Endereco != null) {
                 session.setAttribute("endereco", Endereco);
             }
-            if ((DDDCel != null) && (Cel != null)) {
-                session.setAttribute("celular", "(" + DDDCel + ")" + Cel);
+            if ((DDDCel != null)) {
+                session.setAttribute("dddcelular", DDDCel);
             }
-            if ((DDDTel != null) && (Tel != null)) {
-                session.setAttribute("telefone", "(" + DDDTel + ")" + Tel);
+            if ((Cel != null)) {
+                session.setAttribute("celular", Cel);
+            }
+             if ((DDDTel != null)) {
+                session.setAttribute("dddtelefone", DDDTel);
+            }
+            if ((Tel != null)) {
+                session.setAttribute("telefone", Tel);
             }
             if (Escolaridade != null) {
                 session.setAttribute("escolaridade", Escolaridade);

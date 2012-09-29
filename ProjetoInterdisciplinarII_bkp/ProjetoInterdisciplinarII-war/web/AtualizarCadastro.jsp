@@ -1,5 +1,4 @@
 
-<%@page import="com.sun.xml.rpc.processor.modeler.j2ee.xml.string"%>
 <%--<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>--%>
 
@@ -26,10 +25,10 @@
             String cidade = usuario.getCidade();
             String bairro = usuario.getBairro();
             String endereco = usuario.getEndereco();
-            String celular = usuario.getCelular().substring(1);
-            String DDDcel = celular.substring(0,1);
-            String telefone = usuario.getTelefone().substring(1);
-            String DDDtel = telefone.substring(0,1);
+            String DDDcelular = usuario.getDddcelular();            
+            String celular = usuario.getCelular();
+            String DDDtelefone = usuario.getDddtelefone();  
+            String telefone = usuario.getTelefone();
             String escolaridade = usuario.getEscolaridade();
             String nivel = usuario.getNivel();
             String area = usuario.getArea();
@@ -38,9 +37,9 @@
         %>
         <form action="AtualizaCadastro" >
             <jsp:include page="MenuLogado.jsp"/>
-            <h1>Atualizar Dados Cadastrais</h1>
+            <h1>Atualizar Dados Cadastrais</h1> 
             <br>
-            Preencha os campos abaixo para atualizar o seu cadastro.
+            Preencha os campos abaixo para atualizar o seu cadastro. 
             <table>
                 <tr>
                     <td>
@@ -69,10 +68,10 @@
                     <td>
                         <select name="lstCidade" required="true">
                             <option value="">Selecione</option>
-                            <option value="S?o Paulo">S?o Paulo</option>
-                            <option value="Santo Andr?">Santo Andr?</option>
-                            <option value="S?o Bernardo do Campo">S?o Bernardo do Campo</option>
-                            <option value="S?o Caetano do Sul">S?o Caetano do Sul</option>
+                            <option value="São Paulo">São Paulo</option>
+                            <option value="Santo André">Santo André</option>
+                            <option value="São Bernardo do Campo">São Bernardo do Campo</option>
+                            <option value="São Caetano do Sul">São Caetano do Sul</option>
                         </select>
                     </td>
                 </tr>
@@ -86,7 +85,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Endere?o:
+                        Endereço:
                     </td>
                     <td>
                         <input value="<%=endereco%>" type="text" name="txtEndereco"/>
@@ -97,14 +96,14 @@
                         Celular:
                     </td>
                     <td>
-                        (<input type="text" name="txtDDDCel" maxlength="2" size="1" />) <input value="<%=celular%>" type="text" name="txtCel" maxlength="9" size="7"/>
+                        (<input value="<%=DDDcelular%>" type="text" name="txtDDDCel" maxlength="2" size="1" />) <input value="<%=celular%>" type="text" name="txtCel" maxlength="9" size="7"/>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         Telefone:
                     </td><td>
-                        (<input type="text" name="txtDDDTel" maxlength="2" size="1" />) <input value="<%=telefone%>" type="text" name="txtTel" maxlength="8" size="7"/>
+                        (<input value="<%=DDDtelefone%>" type="text" name="txtDDDTel" maxlength="2" size="1" />) <input value="<%=telefone%>" type="text" name="txtTel" maxlength="8" size="7"/>
                     </td>
                 </tr>
                 <tr>
@@ -114,21 +113,21 @@
                     <td>
                         <select name="lstEscolaridade" required="true">
                             <option value="">Selecione</option>
-                            <option value="Tecnico">T?cnico</option>
+                            <option value="Tecnico">Técnico</option>
                             <option value="Superior Incompleto">Superior Incompleto</option>
                             <option value="Superior Completo">Superior Completo</option>
-                            <option value="P?s-Graduado">P?s-Graduado</option>
+                            <option value="Pós-Graduado">Pós-Graduado</option>
                         </select>
                     </td>
                     <td>
-                        N?vel de Atua??o:
+                        Nível de Atuação:
                     </td>
                     <td>
                         <select name="lstNivel" required="true">
                             <option value="">Selecione</option>
-                            <option value="T?cnico">T?cnico</option>
-                            <option value="Estagi?rio">Estagi?rio</option>
-                            <option value="J?nior">J?nior</option>
+                            <option value="Técnico">Técnico</option>
+                            <option value="Estagiário">Estagiário</option>
+                            <option value="Júnior">Júnior</option>
                             <option value="Pleno">Pleno</option>
                             <option value="Senior">Senior</option>
                             <option value="Gerente">Gerente </option>
@@ -146,15 +145,18 @@
                         </select>
                     </td>
                     <td>
-                        ?rea de Atua??o:
+                        Área de Atuação:
                     </td>
                     <td>
                         <select name="lstArea" required="true">
                             <option value="">Selecione</option>
-                            <option value="Suporte">Suporte</option>
-                            <option value="Programa??o">Programa??o</option>
-                            <option value="An?lise">An?lise</option>
-                            <option value="Projeto">Projetos</option>
+                            <option value="Analise">Analise</option>
+                            <option value="Docência e Pesquisa">Docência e Pesquisa</option>
+                            <option value="Empresário">Empresário</option>
+                            <option value="Gerência">Gerencia</option>
+                            <option value="Programação">Programação</option>
+                            <option value="Redes">Redes</option>
+
                         </select>
                     </td>
                 </tr>
@@ -165,13 +167,18 @@
                     <td>
                         <select name="lstCurso" required="true">
                             <option value="">Selecione</option>
-                            <option value="SI">Sistemas de Informa??o</option>
-                            <option value="CC">Ci?ncias da Computa??o</option>
+                            <option value="SI">Sistemas de Informação</option>
+                            <option value="CC">Ciências da Computação</option>
                         </select>
                     </td>
                 </tr>
+                <tr> </br> </tr>
                 <tr>
-                    <td colspan="2" style="float:right;">
+
+                    <td>
+                        <a href="MeusDados.jsp">
+                            <input type="button" value="Voltar"/>
+                        </a>
                         <input type="submit" value="Finalizar" />
                     </td>
                 </tr>

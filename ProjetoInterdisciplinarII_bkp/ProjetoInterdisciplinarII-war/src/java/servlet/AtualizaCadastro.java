@@ -66,8 +66,10 @@ public class AtualizaCadastro extends HttpServlet {
             usuario.setCidade(cidade);
             usuario.setBairro(bairro);
             usuario.setEndereco(endereco);
-            usuario.setCelular(DDDcelular + celular);
-            usuario.setTelefone(DDDtelefone + telefone);
+            usuario.setDddcelular(DDDcelular);
+            usuario.setCelular(celular);
+            usuario.setDddtelefone(DDDtelefone);
+            usuario.setTelefone(telefone);
             usuario.setEscolaridade(escolaridade);
             usuario.setNivel(nivel);
             usuario.setArea(area);
