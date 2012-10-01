@@ -1,3 +1,2 @@
 language: java
-before-script: ant -Dlibs.CopyLibs.classpath=a/path/to/org-netbeans-modules-java-j2seproject-copylibstask.jar
 script: "ant -buildfile ProjetoInterdisciplinarII_bkp/build.xml"
