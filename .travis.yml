@@ -1,2 +1,2 @@
 language: java
-script: "ant -buildfile Projeto/build.xml"
+script: "ant -buildfile ProjetoInterdisciplinarII_bkp/build.xml"
