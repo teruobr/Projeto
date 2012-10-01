@@ -1,3 +1,2 @@
 language: java
-before_script: "chmod -R a+X ./build.sh"
-script: "/build.sh"
+script: "ant -buildfile Projeto/build.xml"
