@@ -12,7 +12,7 @@ import javax.persistence.Id;
 
 /**
  *
- * @author 31049184
+ * @author Henry
  */
 @Entity
 
