@@ -48,7 +48,7 @@ public class ValidarUsuario extends HttpServlet {
                 if (usuario != null) {
 
                     request.getSession().setAttribute("usuario", usuario);
-                    response.sendRedirect(response.encodeRedirectURL("MeusDados.jsp"));
+                    response.sendRedirect(response.encodeRedirectURL("Home.jsp"));
                 } else {
                     response.sendRedirect(response.encodeRedirectURL("UsuarioInexistente.jsp"));
                 }

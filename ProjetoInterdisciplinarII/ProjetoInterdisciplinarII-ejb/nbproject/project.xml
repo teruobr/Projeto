@@ -6,38 +6,11 @@
             <name>ProjetoInterdisciplinarII-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <included-library dirs="200">file.reference.javax.persistence.jar</included-library>
-            <included-library dirs="200">file.reference.ant-contrib-1.0b3.jar</included-library>
-            <included-library dirs="200">file.reference.bean-validator.jar</included-library>
-            <included-library dirs="200">file.reference.derbyclient.jar</included-library>
-            <included-library dirs="200">file.reference.javax.annotation.jar</included-library>
-            <included-library dirs="200">file.reference.javax.ejb.jar</included-library>
-            <included-library dirs="200">file.reference.javax.el-api.jar</included-library>
-            <included-library dirs="200">file.reference.javax.enterprise.deploy.jar</included-library>
-            <included-library dirs="200">file.reference.javax.faces.jar</included-library>
-            <included-library dirs="200">file.reference.javax.jms.jar</included-library>
-            <included-library dirs="200">file.reference.javax.mail.jar</included-library>
-            <included-library dirs="200">file.reference.javax.management.j2ee.jar</included-library>
-            <included-library dirs="200">file.reference.javax.resource.jar</included-library>
-            <included-library dirs="200">file.reference.javax.security.auth.message.jar</included-library>
-            <included-library dirs="200">file.reference.javax.security.jacc.jar</included-library>
-            <included-library dirs="200">file.reference.javax.servlet-api.jar</included-library>
-            <included-library dirs="200">file.reference.javax.servlet.jsp-api.jar</included-library>
-            <included-library dirs="200">file.reference.javax.servlet.jsp.jstl-api.jar</included-library>
-            <included-library dirs="200">file.reference.javax.transaction.jar</included-library>
-            <included-library dirs="200">file.reference.jaxb-osgi.jar</included-library>
-            <included-library dirs="200">file.reference.jaxm-api.jar</included-library>
-            <included-library dirs="200">file.reference.jaxr-api-osgi.jar</included-library>
-            <included-library dirs="200">file.reference.jersey-core.jar</included-library>
-            <included-library dirs="200">file.reference.junit-4.10.jar</included-library>
-            <included-library dirs="200">file.reference.org-netbeans-modules-java-j2seproject-copylibstask.jar</included-library>
-            <included-library dirs="200">file.reference.webservices-api-osgi.jar</included-library>
-            <included-library dirs="200">file.reference.webservices-osgi.jar</included-library>
-            <included-library dirs="200">file.reference.weld-osgi-bundle.jar</included-library>
             <source-roots>
-                <root id="src.dir"/>
+                <root id="src.dir" name="Pacotes de código-fonte"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir"/>
+                <root id="test.src.dir" name="Pacotes de testes"/>
             </test-roots>
         </data>
     </configuration>
