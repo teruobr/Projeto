@@ -6,6 +6,8 @@
             <name>ProjetoInterdisciplinarII-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <included-library dirs="200">file.reference.javax.persistence.jar</included-library>
+            <included-library dirs="200">file.reference.javax.annotation.jar</included-library>
+            <included-library dirs="200">file.reference.javax.ejb.jar</included-library>
             <source-roots>
                 <root id="src.dir" name="Pacotes de código-fonte"/>
             </source-roots>
