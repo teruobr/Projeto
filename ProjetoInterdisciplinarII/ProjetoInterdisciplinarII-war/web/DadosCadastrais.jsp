@@ -50,7 +50,7 @@
                         RG:
                     </td>
                     <td>
-                        <input  type="text" name="txtRg" required="true"/>
+                        <input  type="text" name="txtRg" required="true" maxlength="9"/>
                     </td>
                 </tr>
                 <tr>
