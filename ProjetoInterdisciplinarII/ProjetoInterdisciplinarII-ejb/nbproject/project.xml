@@ -8,6 +8,7 @@
             <included-library dirs="200">file.reference.javax.persistence.jar</included-library>
             <included-library dirs="200">file.reference.javax.annotation.jar</included-library>
             <included-library dirs="200">file.reference.javax.ejb.jar</included-library>
+            <included-library dirs="200">libs.CopyLibs.classpath</included-library>
             <source-roots>
                 <root id="src.dir" name="Pacotes de código-fonte"/>
             </source-roots>
