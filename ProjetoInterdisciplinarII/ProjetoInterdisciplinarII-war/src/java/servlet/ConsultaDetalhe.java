@@ -68,7 +68,7 @@ public class ConsultaDetalhe extends HttpServlet {
                     request.getSession().setAttribute("usuario", usuario);
                     request.getSession().setAttribute("empresa", empresa);
                     request.getSession().setAttribute("vaga", vaga);
-                    //request.getSession().setAttribute("listaVagas", listaVagas);
+                    request.getSession().setAttribute("listaVagas", null);
                     response.sendRedirect(response.encodeRedirectURL("VerDetalhe.jsp"));
                 } else {
                     response.sendRedirect(response.encodeRedirectURL("PesquisaInexistente.jsp"));

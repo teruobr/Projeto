@@ -73,6 +73,7 @@ public class Aplicacao extends javax.swing.JFrame {
         clicarTabela();
         this.empresa = getEmpresa();
         pegarDados();
+        pnlVagas.setEnabledAt(2,false);
     }
 
     public void pegarDados() {
@@ -959,6 +960,14 @@ public class Aplicacao extends javax.swing.JFrame {
     private javax.swing.JTable vagasTabela;
     // End of variables declaration//GEN-END:variables
     public String senha;
+
+    public JTabbedPane getPnlVagas() {
+        return pnlVagas;
+    }
+
+    public void setPnlVagas(JTabbedPane pnlVagas) {
+        this.pnlVagas.setEnabledAt(2,false);
+    }
 
     public JComboBox getCbArea() {
         return cbArea;
