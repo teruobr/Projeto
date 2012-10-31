@@ -23,13 +23,17 @@
                 alert("Senha não confere!!!");
                 return false;
             }
-            if(!ValidaEmail())
+            /*if(!ValidaEmail())
             {
                 return false;
+            }*/
+            if(!ValidaEmail()){
+                return false;
             }
+            
             return true;
         }
-        function ValidaEmail()
+        /*function ValidaEmail()
         {
             var txt = document.f1.txtEmail.value;
             if ((txt.length != 0) && ((txt.indexOf("@") < 1) || (txt.indexOf('.') < 7)))
@@ -39,6 +43,15 @@
                 obj.focus();
             }
             return true;
+        }*/
+        function ValidaEmail() 
+        {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.f1.txtEmail.value))
+            {
+                return (true)
+            }
+            alert("You have entered an invalid email address!")
+            return (false)
         }
 
     </script>
@@ -62,7 +75,7 @@
                         E-mail:
                     </td>
                     <td>
-                        <input type="text" name="txtEmail" required="true" onblur="ValidaEmail();" />
+                        <input type="text" name="txtEmail" required="true"  />
                     </td>
                 </tr>
                 <tr>
