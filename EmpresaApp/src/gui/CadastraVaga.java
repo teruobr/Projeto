@@ -4,24 +4,24 @@
  */
 package gui;
 
-import bean.Empresa;
-import bean.Vagas;
+import bean.*;
+import interfaces.RAreaAtuacaoRemote;
 import interfaces.RVagasRemote;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.swing.text.AttributeSet;
 import javax.swing.*;
-import javax.swing.text.MaskFormatter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /**
  *
- * @author Administrator
+ * @author Thiago
  */
 public class CadastraVaga extends javax.swing.JFrame {
 
@@ -29,8 +29,25 @@ public class CadastraVaga extends javax.swing.JFrame {
      * Creates new form CadastraVaga
      */
     private Long idEmpresa;
-    
     private Empresa empresa;
+    private List<Experiencias> exp;
+    private List<Usuario> usuario;
+
+    public List<Experiencias> getExp() {
+        return exp;
+    }
+
+    public void setExp(List<Experiencias> exp) {
+        this.exp = exp;
+    }
+
+    public List<Usuario> getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(List<Usuario> usuario) {
+        this.usuario = usuario;
+    }
 
     public Empresa getEmpresa() {
         return empresa;
@@ -47,12 +64,54 @@ public class CadastraVaga extends javax.swing.JFrame {
     public void setIdEmpresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
-    
+
     public CadastraVaga() {
         initComponents();
-        centralizar();       
-    }  
-    
+        centralizar();
+        setResizable(false);
+        txtDetalhe.setLineWrap(true);
+        try {
+            MaxLengthTextDocument maxLength = new MaxLengthTextDocument();
+            maxLength.maxChars = 255;
+            txtDetalhe.setDocument(maxLength);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        InitialContext ctx = null;
+        List<AreaAtuacao> areas = null;
+        try {
+            ctx = new InitialContext();
+            RAreaAtuacaoRemote areasremote = (RAreaAtuacaoRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RAreaAtuacao");
+            
+            if(areasremote.consultar() != null){
+            areas = areasremote.consultar();
+            
+            for (int i = 0; i < areas.size(); i++){
+            cbArea.addItem(areas.get(i).getNome());
+                    }
+            }
+            
+        } catch (NamingException ex) {
+            Logger.getLogger(Aplicacao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+    public class MaxLengthTextDocument extends PlainDocument {
+        //Armazena o número máximo de caracteres para o texto.
+
+        private int maxChars;
+
+        public void insertString(int offs, String str, AttributeSet a)
+                throws BadLocationException {
+            if (str != null && (getLength() + str.length() < maxChars)) {
+                super.insertString(offs, str, a);
+            }
+
+        }
+    }
+    //getter e setter omitidos
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -226,7 +285,8 @@ public class CadastraVaga extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Aplicacao app = new Aplicacao(getEmpresa());
+        Aplicacao app = new Aplicacao(getEmpresa(), getExp(), getUsuario());
+        app.setTitle("Projeto Interdisciplinar II");
         app.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -246,15 +306,15 @@ public class CadastraVaga extends javax.swing.JFrame {
                 vaga.setNivelAtuacao(String.valueOf(cbAtuacao.getSelectedItem()));
                 vaga.setAreaAtuacao(String.valueOf(cbArea.getSelectedItem()));
                 setIdEmpresa(getEmpresa().getId());
-                vaga.setIdEmpresa(getIdEmpresa());
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                               
+                vaga.setIdEmpresa(getIdEmpresa());                
+
                 vagas.incluir(vaga);
                 JOptionPane.showMessageDialog(this, "Vaga Cadastrada com Sucesso");
-                Aplicacao app = new Aplicacao(getEmpresa());
+                Aplicacao app = new Aplicacao(getEmpresa(), getExp(), getUsuario());
+                app.setTitle("Projeto Interdisciplinar II");
                 app.setVisible(true);
                 dispose();
-                
+
             } catch (NamingException ex) {
                 System.out.println("Erro de Transação");
                 Logger.getLogger(Cadastro.class.getName()).log(Level.SEVERE, null, ex);
@@ -375,8 +435,7 @@ public class CadastraVaga extends javax.swing.JFrame {
     public void setTxtTitulo(String txtTitulo) {
         this.txtTitulo.setText(txtTitulo);
     }
-     
-    
+
     private boolean validar() {
         if (txtTitulo.getText().trim().equals("")
                 || txtDetalhe.getText().trim().equals("")
@@ -384,22 +443,21 @@ public class CadastraVaga extends javax.swing.JFrame {
                 || cbArea.getSelectedItem().equals("Selecione")
                 || cbAtuacao.getSelectedItem().equals("Selecione")
                 || txtBairro.getText().trim().equals("")
-                || cbCidade.getSelectedItem().equals("Selecione")){
+                || cbCidade.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(this, "Preencher todos os campos!");
             return false;
         }
         return true;
 
     }
-    
-    /*public boolean validarData() {
-         if (txtData.getText().substring(0,2).contains(" ") || txtData.getText().substring(3,5).contains(" ")|| txtData.getText().substring(6,10).contains(" ")) {   
-                JOptionPane.showMessageDialog(this, "Preencher todos os campos!");
-                return false;
-        }
-         return true;
-    }*/
-    
+    /*
+     * public boolean validarData() { if
+     * (txtData.getText().substring(0,2).contains(" ") ||
+     * txtData.getText().substring(3,5).contains(" ")||
+     * txtData.getText().substring(6,10).contains(" ")) {
+     * JOptionPane.showMessageDialog(this, "Preencher todos os campos!"); return
+     * false; } return true; }
+     */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbArea;
     private javax.swing.JComboBox cbAtuacao;

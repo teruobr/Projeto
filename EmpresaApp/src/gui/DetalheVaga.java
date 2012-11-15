@@ -4,21 +4,28 @@
  */
 package gui;
 
-import bean.Empresa;
-import bean.Vagas;
-import interfaces.RVagasRemote;
+import bean.*;
+import interfaces.*;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.swing.*;
-import javax.swing.text.MaskFormatter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -29,19 +36,58 @@ public class DetalheVaga extends javax.swing.JFrame {
     /**
      * Creates new form DetalheVaga
      */
+    private List<VagasUsuario> lista;
+    
+    private List<Usuario> listaUsuariosVaga = new ArrayList<Usuario>();
+    
     private Vagas listaVaga;
     
     private Empresa empresa;
+    
+    private List<Experiencias> exp;
+    
+    private DetalheUsuario detalheUsuario = new DetalheUsuario();
+    
+    private List<Experiencias> experienciasTotais;
+    
+    private List<List<Experiencias>> experienciasUsuario;
+
+    public List<Experiencias> getExp() {
+        return exp;
+    }
+
+    public void setExp(List<Experiencias> exp) {
+        this.exp = exp;
+    }
+
+    public List<Usuario> getUser() {
+        return user;
+    }
+
+    public void setUser(List<Usuario> user) {
+        this.user = user;
+    }
+    private List<Usuario> user;
 
     public Empresa getEmpresa() {
         return empresa;
+    }
+
+    public List<VagasUsuario> getLista() {
+        return lista;
+    }
+
+    public void setLista(List<VagasUsuario> lista) {
+        this.lista = lista;
+        obterDadosTabela();
+        labelVazioFocusLost(null);
     }
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
         obterDadosTela();
     }
-    
+
     public Vagas getListaVaga() {
         return listaVaga;
     }
@@ -49,10 +95,33 @@ public class DetalheVaga extends javax.swing.JFrame {
     public void setListaVaga(Vagas lista) {
         this.listaVaga = lista;
     }
-    
+
     public DetalheVaga() {
         initComponents();
-        centralizar();        
+        centralizar();
+        setResizable(false);
+        experienciasUsuario = new ArrayList<List<Experiencias>>();
+        txtDetalhe.setLineWrap(true);
+        setTitle("Projeto Interdisciplinar II");
+        chamaCandidato();
+        deletarCandidatoVagaSelecionada();
+        InitialContext ctx = null;
+        List<AreaAtuacao> areas = null;
+        try {
+            ctx = new InitialContext();
+            RAreaAtuacaoRemote areasremote = (RAreaAtuacaoRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RAreaAtuacao");
+
+            areas = areasremote.consultar();
+            if (areas != null) {
+                for (int i = 0; i < areas.size(); i++) {
+                    cbArea.addItem(areas.get(i).getNome());
+                }
+            }
+
+        } catch (NamingException ex) {
+            Logger.getLogger(DetalheVaga.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
@@ -83,6 +152,11 @@ public class DetalheVaga extends javax.swing.JFrame {
         btnVoltar = new javax.swing.JButton();
         btnManutencao = new javax.swing.JButton();
         btnAtualizar = new javax.swing.JButton();
+        btnRemover = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableCandidatoVaga = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        labelVazio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -155,6 +229,38 @@ public class DetalheVaga extends javax.swing.JFrame {
             }
         });
 
+        btnRemover.setText("Remover");
+        btnRemover.setEnabled(false);
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
+
+        tableCandidatoVaga.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Nome", "E-Mail", "Ver Detalhe", "Remover"
+            }
+        ));
+        tableCandidatoVaga.setMaximumSize(new java.awt.Dimension(21474, 64));
+        jScrollPane2.setViewportView(tableCandidatoVaga);
+
+        jLabel1.setText("Candidatos da Vaga");
+
+        labelVazio.setForeground(new java.awt.Color(255, 0, 0));
+        labelVazio.setText("Não existem candidatos para esta vaga!");
+        labelVazio.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                labelVazioFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -184,34 +290,47 @@ public class DetalheVaga extends javax.swing.JFrame {
                         .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtBairro, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbCidade, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(25, 25, 25))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(btnManutencao)
-                        .addGap(34, 34, 34)
-                        .addComponent(btnAtualizar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(168, 168, 168)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(154, 154, 154)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(labelVazio)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnManutencao)
+                                .addGap(26, 26, 26)
+                                .addComponent(btnAtualizar)
+                                .addGap(33, 33, 33)
+                                .addComponent(btnRemover)
+                                .addGap(27, 27, 27))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(165, 165, 165))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel2)
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -236,17 +355,23 @@ public class DetalheVaga extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(67, 67, 67)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAtualizar, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnVoltar)
-                        .addComponent(btnManutencao)))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1)
+                .addGap(9, 9, 9)
+                .addComponent(labelVazio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnVoltar)
+                    .addComponent(btnManutencao)
+                    .addComponent(btnAtualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRemover))
+                .addGap(21, 21, 21))
         );
 
         pack();
@@ -257,8 +382,9 @@ public class DetalheVaga extends javax.swing.JFrame {
     }//GEN-LAST:event_cbAreaActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-        Aplicacao app = new Aplicacao(getEmpresa());
+        Aplicacao app = new Aplicacao(getEmpresa(), getExp(), getUser());
         app.setVisible(true);
+        app.setTitle("Projeto Interdisciplinar II");
         dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
@@ -278,14 +404,14 @@ public class DetalheVaga extends javax.swing.JFrame {
                 vaga.setIdEmpresa(getIdEmpresa());
                 vaga.setNivelAtuacao(String.valueOf(cbAtuacao.getSelectedItem()));
                 vaga.setTitulo(txtTitulo.getText());
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");                 
-                
+
+
                 try {
                     InitialContext ctx = new InitialContext();
                     RVagasRemote vagas = (RVagasRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RVagas");
                     vagas.alterar(vaga);
                     JOptionPane.showMessageDialog(this, "Vaga atualizada com sucesso!");
-                    
+
                     btnManutencao.setEnabled(true);
                     btnAtualizar.setEnabled(false);
                     cbArea.setEnabled(false);
@@ -295,23 +421,25 @@ public class DetalheVaga extends javax.swing.JFrame {
                     txtBairro.setEnabled(false);
                     txtDetalhe.setEnabled(false);
                     txtTitulo.setEnabled(false);
-                    
-                    Aplicacao app = new Aplicacao(getEmpresa());
+
+                    Aplicacao app = new Aplicacao(getEmpresa(), getExp(), getUser());
                     app.setVisible(true);
+                    app.setTitle("Projeto Interdisciplinar II");
                     dispose();
-                    
+
                 } catch (NamingException ex) {
                     Logger.getLogger(DetalheVaga.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this, "Erro na atualização!");
                 }
             }
         }
-        
+
     }//GEN-LAST:event_btnAtualizarActionPerformed
 
     private void btnManutencaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManutencaoActionPerformed
         btnManutencao.setEnabled(false);
         btnAtualizar.setEnabled(true);
+        btnRemover.setEnabled(true);
         cbArea.setEnabled(true);
         cbAtuacao.setEnabled(true);
         cbCidade.setEnabled(true);
@@ -325,7 +453,40 @@ public class DetalheVaga extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBairroActionPerformed
 
-    public void obterDadosTela(){
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+        UIManager.put("OptionPane.noButtonText", "Não");
+        UIManager.put("OptionPane.yesButtonText", "Sim");
+        int opcao = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja remover esta vaga da base da dados?", "Mensagem do Sistema", JOptionPane.YES_NO_OPTION);
+        if (opcao == JOptionPane.YES_OPTION) {
+            Vagas vaga = new Vagas();
+            vaga.setId(getId());
+            try {
+                InitialContext ctx = new InitialContext();
+                RVagasRemote vagas = (RVagasRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RVagas");
+                vagas.excluir(vaga);
+                RVagasUsuarioRemote vagaUsuario = (RVagasUsuarioRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RVagasUsuario");
+                List<VagasUsuario> lista;
+                lista = vagaUsuario.buscarUsuariosVaga(getId());
+                for (int i = 0; i < lista.size(); i++) {
+                    vagaUsuario.excluir(lista.get(i));
+                }
+                JOptionPane.showMessageDialog(this, "Vaga removida com sucesso!");
+                Aplicacao app = new Aplicacao(getEmpresa(), getExp(), getUser());
+                app.setTitle("Projeto Interdisciplinar II");
+                app.setVisible(true);
+                dispose();
+            } catch (NamingException ex) {
+                Logger.getLogger(DetalheVaga.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Erro na remoção da vaga!");
+            }
+        }
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void labelVazioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_labelVazioFocusLost
+        labelVazio.setVisible(listaUsuariosVaga.isEmpty());
+    }//GEN-LAST:event_labelVazioFocusLost
+
+    public void obterDadosTela() {
         setTxtTitulo(getListaVaga().getTitulo());
         setTxtBairro(getListaVaga().getBairro());
         setTxtDetalhe(getListaVaga().getDetalhe());
@@ -337,7 +498,43 @@ public class DetalheVaga extends javax.swing.JFrame {
         setIdEmpresa(getListaVaga().getIdEmpresa());
         //setTxtData(converteData(getListaVaga().getDataFinal()));        
     }
-    
+
+    public void obterDadosTabela() {
+        InitialContext ctx = null;
+        DefaultTableModel modelo = (DefaultTableModel) tableCandidatoVaga.getModel();
+        modelo.setNumRows(0);
+
+        try {
+            ctx = new InitialContext();
+            RUsuarioRemote usuario = (RUsuarioRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RUsuario");
+            DetalheVaga.CorLabel corLabel = new DetalheVaga.CorLabel();
+            corLabel.setForeground(Color.BLUE);
+            tableCandidatoVaga.getColumnModel().getColumn(2).setCellRenderer(corLabel);
+            tableCandidatoVaga.getColumnModel().getColumn(3).setCellRenderer(corLabel);
+            RExperienciasRemote experiencias = (RExperienciasRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RExperiencias");
+
+            for (int i = 0; i < lista.size(); i++) {
+                Usuario user = usuario.consultaUsuario(getLista().get(i).getIdUsuario());
+                listaUsuariosVaga.add(user);
+            }
+            if (listaUsuariosVaga != null && !listaUsuariosVaga.isEmpty()) {
+                for (int i = 0; i < listaUsuariosVaga.size(); i++) {
+                    experienciasTotais = new ArrayList<Experiencias>();   
+                    Experiencias experience = new Experiencias();
+                    experience.setIdUsuario(listaUsuariosVaga.get(i).getId());
+                    experienciasTotais = experiencias.consultar(experience);                    
+                    experienciasUsuario.add(experienciasTotais);
+                    JLabel label = new JLabel("Clique Aqui");
+                    label.setForeground(Color.BLUE);
+                    Object[] row = {String.valueOf(listaUsuariosVaga.get(i).getNome()), String.valueOf(listaUsuariosVaga.get(i).getEmail()), label.getText(), label.getText()};
+                    modelo.addRow(row);
+                }
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DetalheVaga.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -379,7 +576,7 @@ public class DetalheVaga extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void centralizar() {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension janela = getSize();
@@ -394,11 +591,13 @@ public class DetalheVaga extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAtualizar;
     private javax.swing.JButton btnManutencao;
+    private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox cbArea;
     private javax.swing.JComboBox cbAtuacao;
     private javax.swing.JComboBox cbCidade;
     private javax.swing.JComboBox cbEstado;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -408,12 +607,14 @@ public class DetalheVaga extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelVazio;
+    private javax.swing.JTable tableCandidatoVaga;
     private javax.swing.JTextField txtBairro;
     private javax.swing.JTextArea txtDetalhe;
     private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
     private Long id;
-    
     private Long idEmpresa;
 
     public Long getIdEmpresa() {
@@ -423,7 +624,7 @@ public class DetalheVaga extends javax.swing.JFrame {
     public void setIdEmpresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
-   
+
     public Long getId() {
         return id;
     }
@@ -431,7 +632,7 @@ public class DetalheVaga extends javax.swing.JFrame {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public JComboBox getCbArea() {
         return cbArea;
     }
@@ -487,17 +688,25 @@ public class DetalheVaga extends javax.swing.JFrame {
     public void setTxtTitulo(String txtTitulo) {
         this.txtTitulo.setText(txtTitulo);
     }
-       
-    private String converteData(Date date){  
-       String converte = String.valueOf(date);              
-       try {  
-           converte = new SimpleDateFormat("dd/MM/yyyy").format(new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy", Locale.US).parse(converte));
-          return converte;
-       } catch (ParseException ex) {  
-           Logger.getLogger(DetalheVaga.class.getName()).log(Level.SEVERE, null, ex);
-            return "Erro na conversão da data";  
-       }  
-    }    
+
+    /*
+     * public MaskFormatter maskData(JFormattedTextField textfield) throws
+     * ParseException{ MaskFormatter mask = new MaskFormatter("##/##/####");
+     * mask.setOverwriteMode(true); mask.setValidCharacters("0123456789");
+     * mask.setPlaceholderCharacter('_'); mask.install(txtData); return mask;  
+    }
+     */
+    private String converteData(Date date) {
+        String converte = String.valueOf(date);
+        try {
+            converte = new SimpleDateFormat("dd/MM/yyyy").format(new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy", Locale.US).parse(converte));
+            return converte;
+        } catch (ParseException ex) {
+            Logger.getLogger(DetalheVaga.class.getName()).log(Level.SEVERE, null, ex);
+            return "Erro na conversão da data";
+        }
+    }
+
     private boolean validar() {
         if (cbEstado.getSelectedItem().equals("Selecione")
                 || cbAtuacao.getSelectedItem().equals("Selecione")
@@ -505,12 +714,88 @@ public class DetalheVaga extends javax.swing.JFrame {
                 || cbArea.getSelectedItem().equals("Selecione")
                 || txtBairro.getText().trim().equals("")
                 || txtDetalhe.getText().trim().equals("")
-                || txtTitulo.getText().trim().equals("")){
-            
+                || txtTitulo.getText().trim().equals("")) {
+
+
             JOptionPane.showMessageDialog(this, "Preencher todos os campos!");
             return false;
         }
         return true;
     }
-}
+    
+    public void chamaCandidato() {
+        tableCandidatoVaga.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1 && tableCandidatoVaga.getSelectedColumn() == 2) {
+                    detalheUsuario.setUsuario(listaUsuariosVaga.get(tableCandidatoVaga.getSelectedRow()));
+                    detalheUsuario.setEmpresa(getEmpresa());
+                    detalheUsuario.setExperienciasUsuario(experienciasUsuario.get(tableCandidatoVaga.getSelectedRow()));
+                    detalheUsuario.setExp(exp);
+                    if (!detalheUsuario.isVisible()) {
+                        detalheUsuario.setVisible(true);
+                    }
+                    dispose();
+                }
+            }
+        });
+    }
+    
+    public void vagaUsuariosVazio() {
+        JOptionPane.showMessageDialog(this, "Não existem candidatos para esta vaga!");
+    }
+    
+    public void deletarCandidatoVagaSelecionada() {
+        tableCandidatoVaga.addMouseListener(new MouseAdapter() {
+            @Override
+             public void mouseClicked(MouseEvent e) {
+                 if (e.getClickCount() == 1 && tableCandidatoVaga.getSelectedColumn() == 3) {
+                     deletaCandidato();                     
+                 }
+            }
+        });
+    }
+    
+    public void deletaCandidato() {
+        UIManager.put("OptionPane.noButtonText", "Não");
+        UIManager.put("OptionPane.yesButtonText", "Sim");
+        int opcao = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja remover este candidato desta vaga?", "Mensagem do Sistema", JOptionPane.YES_NO_OPTION);
+        if (opcao == JOptionPane.YES_OPTION) {
+            VagasUsuario vagaUsuario = new VagasUsuario();
+            vagaUsuario.setIdVaga(listaVaga.getId());
+            vagaUsuario.setIdUsuario(listaUsuariosVaga.get(tableCandidatoVaga.getSelectedRow()).getId());
+            vagaUsuario.setIdEmpresa(empresa.getId());
+            InitialContext ctx;
+            try {
+                ctx = new InitialContext();
+                RVagasUsuarioRemote vagaEmpresaUsuario = (RVagasUsuarioRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RVagasUsuario");
+                vagaUsuario = vagaEmpresaUsuario.validaUsuarioVaga(vagaUsuario);
+                if (vagaUsuario != null) {
+                    vagaEmpresaUsuario.excluir(vagaUsuario);
+                    JOptionPane.showMessageDialog(this, "Candidato deletado da vaga com sucesso!");
+                    Aplicacao app = new Aplicacao(getEmpresa(), getExp(), getUser());
+                    app.setVisible(true);
+                    app.setTitle("Projeto Interdisciplinar II");
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Erro");
+                }                
+            }catch (NamingException ex) {
+                Logger.getLogger(DetalheVaga.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Erro");
+        }
+    }
+ }
+    public class CorLabel extends DefaultTableCellRenderer implements TableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            return this;
+
+        }
+    }
+}

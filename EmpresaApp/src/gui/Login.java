@@ -5,20 +5,21 @@
 package gui;
 
 import bean.Empresa;
+import bean.Experiencias;
+import bean.Usuario;
 import interfaces.REmpresaRemote;
+import interfaces.RExperienciasRemote;
+import interfaces.RUsuarioRemote;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -30,9 +31,15 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    private List<Experiencias> listaExperiencias;
+    private List<Usuario> listaUsuario;
+
     public Login() {
         initComponents();
         centralizar();
+        setResizable(false);
+        listaUsuario = new ArrayList<Usuario>();
+        setTitle("Projeto Interdisciplinar II");
         MaskFormatter maskCNPJ;
         try {
             maskCNPJ = new MaskFormatter("##.###.###/####-##");
@@ -59,12 +66,13 @@ public class Login extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         txtSenha = new javax.swing.JPasswordField();
         txtIdEmpresa = new javax.swing.JFormattedTextField();
+        btnAdmin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("LOGIN");
 
-        jLabel2.setText("IDEmpresa:");
+        jLabel2.setText("CNPJ:");
 
         jLabel3.setText("Senha:");
 
@@ -85,6 +93,19 @@ public class Login extends javax.swing.JFrame {
         txtSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSenhaActionPerformed(evt);
+            }
+        });
+
+        txtIdEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdEmpresaActionPerformed(evt);
+            }
+        });
+
+        btnAdmin.setText("Administrador");
+        btnAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdminActionPerformed(evt);
             }
         });
 
@@ -113,6 +134,10 @@ public class Login extends javax.swing.JFrame {
                 .addGap(243, 243, 243)
                 .addComponent(jLabel1)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAdmin)
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,7 +156,9 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(btnAdmin)
+                .addContainerGap())
         );
 
         pack();
@@ -145,13 +172,26 @@ public class Login extends javax.swing.JFrame {
                 Empresa company = new Empresa();
                 company.setCnpj(txtIdEmpresa.getText());
                 company.setSenha(txtSenha.getText());
-                
+
                 ctx = new InitialContext();
                 REmpresaRemote empresa = (REmpresaRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/REmpresa");
+                RExperienciasRemote experiencias = (RExperienciasRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RExperiencias");
+                RUsuarioRemote usuarioExperiencia = (RUsuarioRemote) ctx.lookup("java:global/ProjetoInterdisciplinarII/ProjetoInterdisciplinarII-ejb/RUsuario");
 
                 company = empresa.pegarDados(company);
 
                 if (company != null) {
+                    Experiencias exp = new Experiencias();
+                    exp.setCNPJ(company.getCnpj());
+                    listaExperiencias = experiencias.consultarCnpjEmpresa(exp);
+                    for (int i = 0; i < listaExperiencias.size(); i++) {
+                        Usuario usuario = usuarioExperiencia.consultaUsuario(listaExperiencias.get(i).getIdUsuario());
+                        listaUsuario.add(usuario);
+                        if (listaExperiencias.get(i).getNome() == null) {
+                            listaExperiencias.get(i).setNome(company.getNome());
+                            experiencias.alterar(listaExperiencias.get(i));
+                        }
+                    }
 
                     Aplicacao app = new Aplicacao();
                     app.setTxtBairro(company.getBairro());
@@ -167,7 +207,10 @@ public class Login extends javax.swing.JFrame {
                     app.setTxtID(String.valueOf(company.getId()));
                     app.setSenha(company.getSenha());
                     app.setEmpresa(company);
+                    app.setUsuarioExperiencia(listaUsuario);
+                    app.setExperienciasEmpresa(listaExperiencias);
                     app.setVisible(true);
+
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Empresa não encontrada");
@@ -181,6 +224,7 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Cadastro cad = new Cadastro();
+        cad.setTitle("Projeto Interdisciplinar II");
         cad.setVisible(true);
         dispose();
 
@@ -189,6 +233,16 @@ public class Login extends javax.swing.JFrame {
     private void txtSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtSenhaActionPerformed
+
+    private void txtIdEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdEmpresaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdEmpresaActionPerformed
+
+    private void btnAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminActionPerformed
+        AppAdm app = new AppAdm();
+        app.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnAdminActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,6 +286,7 @@ public class Login extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdmin;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
